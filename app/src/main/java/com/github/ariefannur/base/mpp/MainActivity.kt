@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import com.github.ariefannur.base.common.base.BaseResponse
 import com.github.ariefannur.base.common.datasource.remote.MovieApi
+import com.github.ariefannur.base.common.domain.model.ListMovies
 import com.github.ariefannur.base.common.domain.request.GetDetailMovieRequest
 import com.github.ariefannur.base.common.domain.request.GetPopularRequest
 import com.github.ariefannur.base.common.domain.usecase.GetDetailMovie
@@ -27,16 +28,23 @@ class MainActivity : AppCompatActivity() {
 
         val request = GetDetailMovieRequest(233)
         val requestPopular = GetPopularRequest()
-        launchSilent (Dispatchers.Default, Job()) {
-            when(val remote = getPopular.execute(requestPopular)) {
-                is BaseResponse.Success -> {
-                    this@MainActivity.runOnUiThread {
-                        tv_main.text = remote.data.results[0].original_title
+        launchSilent(Dispatchers.Default, Job()) {
+            getPopular.execute(requestPopular) {
+                when (this) {
+                    is BaseResponse.Success -> {
+                        this@MainActivity.runOnUiThread {
+                            tv_main.text = this.data.results[0].original_title
+                        }
+                        Log.d("AF", "get data ${this.data}")
                     }
-                    Log.d("AF", "get data ${remote.data}")
-                }
-                else -> {
-                    Log.d("AF", "error ${(remote as BaseResponse.Error).exception}")
+                    is BaseResponse.Error -> {
+                        Log.d("AF", "error ${this.exception}")
+                    }
+                    is BaseResponse.Loading -> {
+                        this@MainActivity.runOnUiThread {
+                            tv_main.text = "loading"
+                        }
+                    }
                 }
             }
         }

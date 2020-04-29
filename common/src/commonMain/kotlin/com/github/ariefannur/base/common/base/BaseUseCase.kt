@@ -3,15 +3,15 @@ package com.github.ariefannur.base.common.base
 import kotlinx.coroutines.channels.Channel
 
 abstract class BaseUseCase<R: BaseRequest, T>() {
-
     var request: R? = null
     private val channel = Channel<BaseResponse<T>>(Channel.UNLIMITED)
 
-    suspend fun execute(request: R? = null): BaseResponse<T> {
+    suspend fun execute(request: R? = null,  callback: BaseResponse<T>.() -> Unit)  {
         this.request = request
-        return when(request?.validate()) {
-            true -> run()
-            else  -> BaseResponse.Error("Invalidate error")
+        callback.invoke(BaseResponse.Loading())
+        when(request?.validate()) {
+            true -> callback.invoke(run())
+            else  -> callback.invoke(BaseResponse.Error("Invalidate error"))
         }
     }
 
