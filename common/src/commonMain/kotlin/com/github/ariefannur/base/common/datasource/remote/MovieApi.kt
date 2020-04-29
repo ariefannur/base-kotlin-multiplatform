@@ -1,12 +1,12 @@
 package com.github.ariefannur.base.common.datasource.remote
 
 import com.github.ariefannur.base.common.base.BaseResponse
+import com.github.ariefannur.base.common.domain.model.ListMovies
 import com.github.ariefannur.base.common.domain.model.Movie
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.parseList
 
 class MovieApi : MovieRemoteDataSource {
 
@@ -15,12 +15,12 @@ class MovieApi : MovieRemoteDataSource {
     private val httpClient = HttpClient()
 
     @ImplicitReflectionSerializer
-    override suspend fun getPopularMovie(): BaseResponse<List<Movie>> {
+    override suspend fun getPopularMovie(): BaseResponse<ListMovies> {
         return try {
             val path = "movie/popular"
             val finalUrl = "$baseUrl$path?api_key=$key"
             val json = httpClient.get<String>(finalUrl)
-            val response = Json.nonstrict.parseList<Movie>( json)
+            val response = Json.nonstrict.parse(ListMovies.serializer(), json)
             BaseResponse.Success(response)
         } catch (e: Exception) {
             BaseResponse.Error(e.message ?: "")

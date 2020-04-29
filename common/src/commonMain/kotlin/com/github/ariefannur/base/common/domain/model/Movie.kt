@@ -10,7 +10,7 @@ data class Movie(
     val original_title: String,
     val overview: String,
     val popularity: Float,
-    val tagline: String,
+    val tagline: String = "",
     val title: String,
     val release_date: String
 ) {
