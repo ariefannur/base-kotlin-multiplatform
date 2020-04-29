@@ -24,6 +24,10 @@ android {
         }
     }
 
+    packagingOptions {
+        exclude ("META-INF/*.kotlin_module")
+    }
+
 }
 
     dependencies {
@@ -32,8 +36,11 @@ android {
         implementation (Libraries.appCompat)
         implementation (Libraries.ktxCore)
         implementation (Libraries.constraintLayout)
+        implementation (Libraries.coroutineCore)
+        implementation (Libraries.coroutineAndroid)
         testImplementation (TestLibraries.junit4)
         androidTestImplementation (TestLibraries.testRunner)
         androidTestImplementation (TestLibraries.espresso)
+        implementation (project(":common"))
     }
 

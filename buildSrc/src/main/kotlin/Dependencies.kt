@@ -31,7 +31,7 @@ private object Versions {
     const val ktx = "1.2.0"
     const val coroutine = "1.2.1"
     const val ktor = "1.2.5"
-    const val serialization = "0.13.0"
+    const val serialization = "0.20.0"
 }
 
 object Libraries {
@@ -40,6 +40,8 @@ object Libraries {
     const val appCompat        = "androidx.appcompat:appcompat:${Versions.jetpack}"
     const val constraintLayout = "androidx.constraintlayout:constraintlayout:${Versions.constraintLayout}"
     const val ktxCore          = "androidx.core:core-ktx:${Versions.ktx}"
+    const val coroutineCore                 = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutine}"
+    const val coroutineAndroid              = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutine}"
 
 }
 

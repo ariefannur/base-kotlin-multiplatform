@@ -11,6 +11,13 @@ android {
         versionName = "1.0"
     }
     buildTypes {
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file('local.properties').newDataInputStream())
+        def key = properties.getProperty('apikey')
+
+        debug {
+            buildConfigField "String", 'KEY', "\"$key\""
+        }
         release {
             minifyEnabled false
         }
@@ -55,6 +62,7 @@ kotlin {
     }
 
     sourceSets {
+
         commonMain.dependencies {
             implementation LibraryCommon.kotlinStdLibCommon
             implementation LibraryCommon.ktorCore

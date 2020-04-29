@@ -11,7 +11,7 @@ abstract class BaseUseCase<R: BaseRequest, T>() {
         this.request = request
         return when(request?.validate()) {
             true -> run()
-            else  -> BaseResponse.Error(IllegalArgumentException())
+            else  -> BaseResponse.Error("Invalidate error")
         }
     }
 
