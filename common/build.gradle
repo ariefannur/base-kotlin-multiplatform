@@ -1,0 +1,86 @@
+apply plugin: BuildPlugins.kotlinMultiPlatform
+apply plugin: BuildPlugins.kotlinSerialization
+apply plugin: BuildPlugins.androidLibrary
+
+android {
+    compileSdkVersion(AndroidSdk.compile)
+    defaultConfig {
+        minSdkVersion(AndroidSdk.min)
+        targetSdkVersion(AndroidSdk.compile)
+        versionCode = 1
+        versionName = "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'src/androidMain/AndroidManifest.xml'
+            java.srcDirs = ['src/androidMain/kotlin']
+            res.srcDirs = ['src/androidMain/res']
+        }
+        /*getByName("test") {
+            java.srcDirs("src/androidTest/kotlin")
+            res.srcDirs("src/androidTest/res")
+        }*/
+    }
+}
+
+kotlin {
+    targets {
+        // iPhone simulator    : presets.iosX64
+        // real iDevice 32 bit : presets.iosArm32
+        // real iDevice 64 bit : presets.iosArm64
+        def iosPreset = presets.iosX64
+
+        fromPreset(iosPreset, 'ios') {
+            binaries {
+                framework {
+                    // Disable bitcode embedding for the simulator build.
+                    if (iosPreset == presets.iosX64) {
+                        embedBitcode("disable")
+                    }
+                }
+            }
+            //compilations.main.outputKinds('FRAMEWORK')
+            /*compilations.each {
+                 it.extraOpts("-linkerOpts", "-lsqlite3")
+            }*/
+        }
+
+        fromPreset(presets.android, 'android')
+    }
+
+    sourceSets {
+        commonMain.dependencies {
+            implementation LibraryCommon.kotlinStdLibCommon
+            implementation LibraryCommon.ktorCore
+            implementation LibraryCommon.serializationRuntimeCommon
+            implementation LibraryCommon.coroutineCoreCommon
+        }
+
+        androidMain.dependencies {
+            implementation LibraryCommon.kotlinStdLibCommon
+            implementation LibraryCommon.kotlinStdLib
+            implementation LibraryCommon.coroutineCore
+            implementation LibraryCommon.coroutineAndroid
+            implementation LibraryCommon.serializationRuntime
+            implementation LibraryCommon.ktorAndroid
+        }
+
+        iosMain.dependencies {
+            implementation LibraryCommon.kotlinStdLibCommon
+            implementation LibraryCommon.coroutineCoreNative
+            implementation LibraryCommon.serializationRuntimeNative
+            implementation LibraryCommon.ktoriOS
+        }
+
+    }
+
+}
+
+
+
